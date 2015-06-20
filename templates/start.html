@@ -1,0 +1,80 @@
+{% extends "index.html" %}
+{% block content %}
+<section class="lesson-box">
+    <div class="lesson-box-title"><h2>{{ ABOUT_TEXT[0] }}</h2></div>
+    <div class="lesson-box-content">
+        <p>
+            {{ ABOUT_TEXT[1] }} <a href="https://www.udacity.com">Udacity.com</a>.
+        </p>
+        {% for text in ABOUT_TEXT[2:] %}
+        <p>
+            {{ text }}
+        </p>
+        {% endfor %}
+    </div>
+</section>
+<section class="guestbook-box">
+    <div class="guestbook-box-title"><h2>Guestbook</h2></div>
+    <div class="guestbook-box-form">
+        <form action="/sign" method="POST">
+            <!-- 'required' attribute will prompt user to fill out fields and 'type="email" will validate email input. 
+            This is not Safari compatible, therefore the test statements below. Will prompt user to fill out missing 
+            field and retain already filled out fields. Dicts 'form_errors' and 'form_input_holder' are passed from 
+            main.py for reference values -->
+            <label for="author">Name</label>
+                
+            {% if True not in form_errors.values() %}
+            <div><input type="text" name="author" placeholder="Full name" required></div>
+
+            {% elif (form_errors.name_error == False) and (True in form_errors.values()) %}
+            <div><input type="text" name="author" value="{{ form_input_holder.name_field }}" required></div>
+                
+            {% elif form_errors.name_error == True %}
+            <span><font color="red"><em> Please enter your name</em></font></span>
+            <div><input type="text" name="author" placeholder="(only letters [a-z] allowed)" required></div>
+                    
+            {% endif %}
+
+            <label for="email">E-mail</label>
+
+            {% if True not in form_errors.values() %}
+            <div><input type="email" name="email" placeholder="(will not be displayed)" required></div>
+                
+            {% elif (form_errors.email_error == False) and (True in form_errors.values()) %}
+            <div><input type="email" name="email" value="{{ form_input_holder.email_field }}" required></div>
+                
+            {% elif form_errors.email_error == True %}
+            <span><font color="red"><em>Please enter a valid e-mail</em></font></span>
+            <div><input type="email" name="email" placeholder="example@mail.com" required></div>
+
+            {% endif %}
+
+            <label for="content">Message</label>
+
+            {% if True not in form_errors.values() %}
+            <div><textarea name="content" placeholder="Leave a comment..." maxlenght="500" required></textarea></div>
+                
+            {% elif (form_errors.content_error == False) and (True in form_errors.values()) %}
+            <div><textarea name="content" maxlenght="500" required>{{ form_input_holder.content_field }}</textarea></div>
+                
+            {% elif form_errors.content_error == True %}
+            <span><font color="red"><em>Please enter your message</em></font></span>
+            <div><textarea name="content" placeholder="Leave a comment..." maxlenght="500" required></textarea></div>
+
+            {% endif %}
+
+            <div><button type="submit" name="submit" value="Submit">Submit</button></div>
+        </form>        
+    </div>
+    <div class="guestbook-box-posts">
+
+        {% for greeting in greetings %}
+        <hr>
+        <p><em>{{ greeting.content }}</em></p>
+        <p class="signature">-<b> {{ greeting.author }} </b></p>
+        {% endfor %}
+        
+        <hr>               
+    </div>
+</section>
+{% endblock %}
